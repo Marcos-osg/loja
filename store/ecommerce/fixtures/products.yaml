@@ -1,0 +1,32 @@
+- model: 'ecommerce.products'
+  pk:
+  fields:
+    marca: 'Nike'
+    nome: 'Nike aniversario 100 anos'
+    preco : 49.50
+    preco_promo: 
+    descricao: 'camiseta comemorativa'
+- model: 'ecommerce.products'
+  pk:
+  fields:
+    marca: 'addidas'
+    nome: 'addidas aniversario 100 anos'
+    preco : 59.50
+    preco_promo: 
+    descricao: 'camiseta comemorativa'
+- model: 'ecommerce.products'
+  pk:
+  fields:
+    marca: 'puma'
+    nome: 'puma aniversario 100 anos'
+    preco : 40.50
+    preco_promo: 
+    descricao: 'camiseta comemorativa'
+- model: 'ecommerce.products'
+  pk:
+  fields:
+    marca: 'hering'
+    nome: 'hering aniversario 100 anos'
+    preco : 45.90
+    preco_promo: 
+    descricao: 'camiseta comemorativa'
