@@ -15,7 +15,12 @@
                           <div class="col-lg-4 col-sm-4">
                              <div class="box_main">
                                  <h4 class="shirt_text">{{product.nome}}</h4>
+                                 {% if product.preco_promo %}
+                                 <p class="price_text" style="color: #262626;">De: <span class="text-decoration-line-through" style="color: #ff0000;">R${{product.preco}}</span></p>
+                                 <p class="price_text text-muted"><span style="color: #262626;">Por: R${{product.preco_promo|default_if_none:""}}</span></p>
+                                 {% else %}
                                  <p class="price_text"><span style="color: #262626;">R$ {{product.preco}}</span></p>
+                                 {% endif %}
                                  <div class="tshirt_img"><img src="{% static 'images/tshirt-img.png' %}"></div>
                                  <div class="btn_main">
                                     <div class="buy_bt"><a href="#">Comprar Agora</a></div>
