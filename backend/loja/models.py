@@ -32,3 +32,35 @@ class Camisetas(Header):
     def __str__(self):
         return f"{self.marca} - {self.tamanho} - {self.cor} -- R${self.preco}"
     
+
+class Blusas(Header):
+    cor = models.CharField(max_length=64, choices=choices.lista_de_cores)
+    tamanho = models.CharField(max_length=64, choices=choices.tamanhos_camisetas)
+    marca = models.CharField(max_length=64, choices=choices.marcas)
+    preco = models.DecimalField(max_digits=10, decimal_places=2 ,default=0)
+    preco_promo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    estoque = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Blusa"
+        verbose_name_plural = "Blusas"
+
+    def __str__(self):
+        return f"{self.marca} - {self.tamanho} - {self.cor} -- R${self.preco}"
+    
+
+class Calcas(Header):
+    cor = models.CharField(max_length=64, choices=choices.lista_de_cores)
+    tamanho = models.CharField(max_length=64, choices=choices.tamanhos_camisetas)
+    marca = models.CharField(max_length=64, choices=choices.marcas)
+    preco = models.DecimalField(max_digits=10, decimal_places=2 ,default=0)
+    preco_promo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    estoque = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Calça"
+        verbose_name_plural = "Calças"
+
+    def __str__(self):
+        return f"{self.marca} - {self.tamanho} - {self.cor} -- R${self.preco}"
+    
