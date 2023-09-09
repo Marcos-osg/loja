@@ -1,0 +1,100 @@
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Branco
+    tamanho: PP
+    marca: Nike
+    preco: 49.99
+    preco_promo: 39.99
+    estoque: 50
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Preto
+    tamanho: P
+    marca: Adidas
+    preco: 59.99
+    preco_promo: 49.99
+    estoque: 40
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Azul
+    tamanho: M
+    marca: Puma
+    preco: 39.99
+    preco_promo: 29.99
+    estoque: 30
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Vermelho
+    tamanho: G
+    marca: Reebok
+    preco: 69.99
+    preco_promo: 59.99
+    estoque: 25
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Verde
+    tamanho: GG
+    marca: Converse
+    preco: 44.99
+    preco_promo: 34.99
+    estoque: 35
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Amarelo
+    tamanho: P
+    marca: New Balance
+    preco: 54.99
+    preco_promo: 44.99
+    estoque: 20
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Cinza
+    tamanho: M
+    marca: Vans
+    preco: 64.99
+    preco_promo: 54.99
+    estoque: 15
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Rosa
+    tamanho: G
+    marca: Under Armour
+    preco: 79.99
+    preco_promo: 69.99
+    estoque: 10
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Roxo
+    tamanho: GG
+    marca: Fila
+    preco: 49.99
+    preco_promo: 39.99
+    estoque: 28
+- model: loja.Camisetas
+  fields:
+    created_at: '2023-09-09 12:00:00'
+    updated_at: '2023-09-09 12:00:00'
+    cor: Laranja
+    tamanho: M
+    marca: ASICS
+    preco: 59.99
+    preco_promo: 49.99
+    estoque: 22
