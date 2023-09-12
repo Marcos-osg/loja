@@ -1,20 +1,16 @@
 from ninja.orm import create_schema
+from ninja import Schema
+from pydantic import UUID4
 
-from backend.loja.models import Header, Camisetas, Blusas, Calcas
+from backend.loja.models import Header, Produtos
 
 excluded = [field.name for field in Header._meta.fields]
 
-CamisasSchema = create_schema(
-    Camisetas,
-    fields = [field.name for field in Camisetas._meta.fields if  field.name not in excluded]
+ProdutosSchema = create_schema(
+    Produtos,
+    fields = [field.name for field in Produtos._meta.fields if  field.name not in excluded]
 )
 
-BlusasSchema = create_schema(
-    Blusas,
-    fields = [field.name for field in Blusas._meta.fields if  field.name not in excluded]
-)
-
-CalcasSchema = create_schema(
-    Calcas,
-    fields = [field.name for field in Calcas._meta.fields if  field.name not in excluded]
-)
+class ItemCarrinhoIn(Schema):
+    produto: UUID4
+    quantidade: int
