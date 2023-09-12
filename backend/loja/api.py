@@ -1,52 +1,19 @@
 from typing import List
 from ninja import NinjaAPI
 
-from backend.loja.schemas import CamisasSchema, CalcasSchema, BlusasSchema
-from backend.loja.models import Camisetas, Blusas, Calcas
+from backend.loja.schemas import ProdutosSchema, ItemCarrinhoIn
+from backend.loja.models import Produtos, ItensCarrinho, Carrinho
 
-api = NinjaAPI()
+api = NinjaAPI(title="API Loja Virtual")
 
-@api.get("/camisetas", response=List[CamisasSchema])
-def camisetas(request):
-    camisetas = Camisetas.objects.all()
-    return camisetas
+@api.get("/todos_produtos", response=List[ProdutosSchema])
+def produtos(request):
+    produtos = Produtos.objects.all()
+    return produtos
 
-@api.get("/blusas", response=List[BlusasSchema])
-def blusas(request):
-    blusas = Blusas.objects.all()
-    return blusas
-
-@api.get("/calcas", response=List[CalcasSchema])
-def calcas(request):
-    calcas = Calcas.objects.all()
-    return calcas
-
-
-@api.get("/todos_produtos")
-def todos_produtos(request):
-    data = {}
-    excluded_fields = ("id", "created_at", "updated_at")
-    calcas = Calcas.objects.all().values()
-    blusas = Blusas.objects.all().defer(excluded_fields).values()
-    camisetas = Camisetas.objects.all().defer(excluded_fields).values()
-
-    data["blusas"] = []
-    data["camisetas"] = []
-    data["calcas"] = []
-
-    for item in camisetas:
-        for field in excluded_fields:
-            item.pop(field, None)
-        data["camisetas"] += [item]
-    
-    for item in blusas:
-        for field in excluded_fields:
-            item.pop(field, None)
-        data["blusas"] += [item]
-
-    for item in calcas:
-        for field in excluded_fields:
-            item.pop(field, None)
-        data["calcas"] += [item]
-
-    return data
+@api.post("/adiciona_carrinho")
+def adiciona_item_carrinho(request, payload: ItemCarrinhoIn):
+    _produto = Produtos.objects.get(id=payload.produto)
+    payload.produto = _produto
+    ItensCarrinho.objects.create(**payload.dict())
+    return {"sucesso":"Produto adicionado"}

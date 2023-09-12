@@ -31,3 +31,10 @@ marcas = [
     ("Fila", "Fila"),
     ("ASICS", "ASICS"),
 ]
+
+tipo = [
+    ("Calcas", "Calças"),
+    ("Camiseta", "Camiseta"),
+    ("Blusa", "Blusa"),
+    ("Shorts", "Shorts"),
+]
