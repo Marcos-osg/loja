@@ -14,3 +14,7 @@ ProdutosSchema = create_schema(
 class ItemCarrinhoIn(Schema):
     produto: UUID4
     quantidade: int
+
+class ItemCarrinhoOut(Schema):
+    produto: UUID4
+    quantidade: int
