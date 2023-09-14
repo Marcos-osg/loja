@@ -31,13 +31,27 @@ def adiciona_item_carrinho(request, payload: ItemCarrinhoIn):
             carrinho = Carrinho(
                 pedido=session
             ).save()
-        
-        item = ItensCarrinho(produto=_produto, quantidade=payload.quantidade, carrinho=carrinho)
-        item.save()
-        carrinho.valor_final = carrinho.valor_final + item.valor_produtos
-        carrinho.save()
+            carrinho = Carrinho.objects.get(pedido=session)
+        cart_itens = ItensCarrinho.objects.filter(carrinho=carrinho).all()
+        if cart_itens:
+            valor_final = 0
+            for i in cart_itens:
+                if _produto == i.produto:
+                    i.quantidade = payload.quantidade + i.quantidade
+                    i.valor_produtos = _produto.preco + i.valor_produtos
+                    i.save()
+                    valor_final += i.valor_produtos
+            carrinho.valor_final = valor_final
+            carrinho.save() 
+            
+        else:
+            item = ItensCarrinho(produto=_produto, quantidade=payload.quantidade, carrinho=carrinho)
+            item.save()
+            carrinho.valor_final = carrinho.valor_final + item.valor_produtos
+            carrinho.save()
         data["sucesso"] = "Produto adicionado ao carrinho"
     except Exception as e:
+        print(e)
         data["erro"] = "Ocorreu um erro ao adicionar o produto ao carrinho"
 
     return data
@@ -47,25 +61,48 @@ def remove_item_carrinho(request, payload: ItemCarrinhoOut):
     data = {}
     try:
         session = request.session["cart"]
-    except:
-        session = uuid4()
-        request.session["cart"] = str(session)
-    
-    produto = Produtos.objects.get(id=payload.produto)
 
-    try:
+        produto = Produtos.objects.get(id=payload.produto)
         carrinho = Carrinho.objects.filter(pedido=session).first()
         if not carrinho:
             carrinho = Carrinho(
                 pedido=session
             ).save()
-        item = ItensCarrinho.objects.get(carrinho=carrinho)
-        item.quantidade = item.quantidade - payload.quantidade
-        item.save()
-        carrinho.valor_final = carrinho.valor_final - (produto.preco * payload.quantidade)
-        carrinho.save()
+        item = ItensCarrinho.objects.filter(carrinho=carrinho).all()
+        for i in item:
+            if i.produto == produto:
+                i.quantidade = i.quantidade - payload.quantidade
+                i.save()
+            carrinho.valor_final = carrinho.valor_final - (produto.preco * payload.quantidade)
+            carrinho.save()
         data["sucesso"] = "Produto removido do carrinho"
     except Exception as e:
+        print(e)
         data["erro"] = "Ocorreu um erro ao remover o produto do carrinho"
 
     return data
+
+@api.get("/carrinho")
+def render_cart(request):
+    try:
+        itens_carrinho = {}
+        session = request.session["cart"]
+        _cart = Carrinho.objects.get(pedido=session)
+        items = ItensCarrinho.objects.filter(carrinho=_cart)
+
+        count = 0
+        for i in items:
+            count += 1
+            itens_carrinho[f"produto_{count}"] = {
+                "produto":f"{i.produto.tipo} {i.produto.marca} {i.produto.cor}",
+                "tamanho": i.produto.tamanho,
+                "valor_produto":i.produto.preco, 
+                "quantidade":i.quantidade,
+                "valor_total_produto":i.valor_produtos,
+            }
+        
+        print(itens_carrinho)
+        itens_carrinho["valor_final"] = _cart.valor_final
+        return itens_carrinho
+    except:
+        return {"erro":"Carrinho de compras não localizado"}
