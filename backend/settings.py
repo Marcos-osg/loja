@@ -74,7 +74,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
-
+SESSION_COOKIE_AGE = 1800
+SESSION_COOKIE_NAME = 'cart'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
