@@ -4,7 +4,6 @@ from uuid import uuid4
 
 from backend.loja.schemas import ProdutosSchema, ItemCarrinhoIn, ItemCarrinhoOut
 from backend.loja.models import Produtos, ItensCarrinho, Carrinho
-from backend.loja import utils
 
 
 api = NinjaAPI(title="API Loja Virtual")
@@ -42,8 +41,9 @@ def adiciona_item_carrinho(request, payload: ItemCarrinhoIn):
                     i.save()
                     valor_final += i.valor_produtos
             carrinho.valor_final = valor_final
-            carrinho.save() 
-            
+            carrinho.save()
+            item = ItensCarrinho(produto=_produto, quantidade=payload.quantidade, carrinho=carrinho)
+            item.save()
         else:
             item = ItensCarrinho(produto=_produto, quantidade=payload.quantidade, carrinho=carrinho)
             item.save()
@@ -68,13 +68,29 @@ def remove_item_carrinho(request, payload: ItemCarrinhoOut):
             carrinho = Carrinho(
                 pedido=session
             ).save()
-        item = ItensCarrinho.objects.filter(carrinho=carrinho).all()
-        for i in item:
-            if i.produto == produto:
-                i.quantidade = i.quantidade - payload.quantidade
-                i.save()
-            carrinho.valor_final = carrinho.valor_final - (produto.preco * payload.quantidade)
-            carrinho.save()
+        cart_itens = ItensCarrinho.objects.filter(carrinho=carrinho).all()
+        if cart_itens:
+            valor_final = 0
+            for i in cart_itens:
+                if i.produto == produto:
+                    if i.quantidade == payload.quantidade:
+                        item_delete = ItensCarrinho.objects.get(carrinho=carrinho, produto=i.produto)
+                        print("item para deletar",item_delete)
+                        item_delete.delete()
+                        produto.estoque = produto.estoque + payload.quantidade
+                        produto.save()
+                    else:
+                        i.quantidade -= payload.quantidade
+                        i.valor_produtos = produto.preco - i.valor_produtos
+                        i.save()
+                        produto.estoque = produto.estoque + payload.quantidade
+                        produto.save()
+                        valor_final -= i.valor_produtos
+            carrinho.valor_final = valor_final
+            carrinho.save() 
+
+        carrinho.valor_final = carrinho.valor_final - (produto.preco * payload.quantidade)
+        carrinho.save()
         data["sucesso"] = "Produto removido do carrinho"
     except Exception as e:
         print(e)
@@ -90,6 +106,8 @@ def render_cart(request):
         _cart = Carrinho.objects.get(pedido=session)
         items = ItensCarrinho.objects.filter(carrinho=_cart)
 
+        if not items:
+            itens_carrinho["vazio"] = "Seu carrinho de compras está vazio"
         count = 0
         for i in items:
             count += 1
@@ -101,8 +119,6 @@ def render_cart(request):
                 "valor_total_produto":i.valor_produtos,
             }
         
-        print(itens_carrinho)
-        itens_carrinho["valor_final"] = _cart.valor_final
         return itens_carrinho
     except:
         return {"erro":"Carrinho de compras não localizado"}
