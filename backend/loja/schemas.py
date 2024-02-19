@@ -30,7 +30,7 @@ class CarrinhoSchema(Schema):
 
 
 class CarrinhoPayload(Schema):
-    """ Schema para adicionar item via POST """
+    """ Schema para adicionar/excluir item via POST """
     id_produto: str
     quantidade: int
     

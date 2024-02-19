@@ -52,6 +52,28 @@ def adiciona_item_carrinho(request, payload:CarrinhoPayload):
         print("produto não encontrado")
         return 404, ({"message": "Produto não encontrado"})
 
-@api.post("/remove-item-carrinho")
-def remove_item_carrinho(request):
-    ...
+@api.post("/remove-item-carrinho", response={200:dict, 404:Error, 500:Error})
+def remove_item_carrinho(request, payload:CarrinhoPayload):
+    carrinho = get_cart()
+    try:
+        produto = Produtos.objects.get(pk=payload.id_produto)
+        
+        """ verifica se o produto já existe no carrinho se existente altera a quantidade, caso contrario exclui """
+        item = ItensCarrinho.objects.filter(carrinho=carrinho, produto=produto).first()
+
+        if item:
+            if item.quantidade <= 1 or item.quantidade <= payload.quantidade:
+                item.delete()
+                return ({"sucesso":f"O produto {produto._name_product()} foi removido do carrinho"})
+            else:
+                item.quantidade -= payload.quantidade
+                item.save()
+                return ({"sucesso":f"O produto {produto._name_product()} foi removido do carrinho"})
+
+    except Exception as e:
+        print(e)
+        return 500, ({"message": str(e)})
+    except Produtos.DoesNotExist:
+        print("produto não encontrado")
+        return 404, ({"message": "Produto não encontrado"})
+        
