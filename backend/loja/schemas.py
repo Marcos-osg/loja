@@ -27,7 +27,12 @@ class CarrinhoSchema(Schema):
     pedido: str
     valor_final: float
     finalizado: bool
-    
+
+
+class CarrinhoPayload(Schema):
+    """ Schema para adicionar item via POST """
+    id_produto: str
+    quantidade: int
     
 class ItensCarrinhoSchema(Schema):
     """ Schema de itens do carrinho """
