@@ -1,20 +1,45 @@
-from ninja.orm import create_schema
 from ninja import Schema
-from pydantic import UUID4
 
-from backend.loja.models import Header, Produtos
+class Error(Schema):
+    message: str
 
-excluded = [field.name for field in Header._meta.fields]
+class ProdutoSchema(Schema):
+    """ Schema de produto """
+    tipo: str
+    cor: str
+    tamanho: str
+    marca: str
+    preco: float
+    preco_promo: float
+    estoque: str
+    
 
-ProdutosSchema = create_schema(
-    Produtos,
-    fields = [field.name for field in Produtos._meta.fields if  field.name not in excluded]
-)
+class ProdutoInfoSchema(Schema):
+    """ Schema de info para o produto do carrinho """
+    tipo: str
+    cor: str
+    tamanho: str
+    marca: str
 
-class ItemCarrinhoIn(Schema):
-    produto: UUID4
+
+class CarrinhoSchema(Schema):
+    """ Schema de carrinho """
+    pedido: str
+    valor_final: float
+    finalizado: bool
+    
+    
+class ItensCarrinhoSchema(Schema):
+    """ Schema de itens do carrinho """
+    produto: ProdutoInfoSchema
     quantidade: int
+    valor_unitario: float
+    valor_total_produto: float
 
-class ItemCarrinhoOut(Schema):
-    produto: UUID4
-    quantidade: int
+
+class PedidoSchema(Schema):
+    """ Schema de pedidos """
+    carrinho_pedido: str
+    total_pedido: float
+    cod_pagamento: str
+    status_pagamento: str
