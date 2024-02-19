@@ -47,9 +47,9 @@ class Produtos(Header):
     
 
 class Carrinho(Header):
-    pedido = models.UUIDField(null=True, blank=True)
+    pedido = models.CharField(max_length=50, null=True, blank=True)
     valor_final = models.DecimalField(max_digits=10, decimal_places=2 ,default=0)
-    pago = models.BooleanField(default=False)
+    finalizado = models.BooleanField(default=False)
     
     def save(self, *args, **kwargs):
         return super(Carrinho, self).save(*args, **kwargs)
@@ -72,7 +72,7 @@ class Carrinho(Header):
         verbose_name_plural = "Carrinhos de compras"
 
     def __str__(self):
-        return f"{self.pedido} - {'Sim' if self.pago == True else 'Não'} x {self.valor_final}"
+        return f"{self.pedido} - Finalizado: {'Sim' if self.finalizado == True else 'Não'} x {self.valor_final}"
 
 
 class ItensCarrinho(Header):
@@ -94,3 +94,13 @@ class ItensCarrinho(Header):
 
     def __str__(self):
         return f"{self.produto} x {self.quantidade} - R$ {self.valor_total_produto}"
+
+
+class Pedido(Header):
+    carrinho_pedido = models.CharField(max_length=50)
+    total_pedido = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    cod_pagamento = models.CharField(max_length=50, null=True, blank=True)
+    status_pagamento = models.CharField(max_length=100, null=True, blank=True)
+    
+    def __str__(self):
+        return f"{self.carrinho_pedido} R$ {self.total_pedido}"

@@ -5,10 +5,9 @@ from ..models import *
 class TesteLoja(TestCase):
 
     def setUp(self) -> None:
-        self.id_produto = "af2ce333-2d22-4000-b9eb-dd5bc5d9a2a6"
-        # self.id_produto = "f5ee01b3-984a-4aa8-b583-7ae6fc2748e2"
-        self.id_carrinho = "7360abc7-1bf5-41de-9c74-1048f8809273"
-        self.quantidade = 3
+        self.id_produto = "fa8a8f4e-dd99-40c9-9648-a10f85497dcc"
+        self.id_carrinho = "7360abc7-1bf5-41de-9c79-1048f8809271"
+        self.quantidade = 4
         self.quantidade_delete = 1
 
     
@@ -20,12 +19,12 @@ class TesteLoja(TestCase):
             print("Produto não localizado ")
 
     def test_get_cart(self):
-        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho)
+        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho, finalizado=False)
         print("Carrinho: ", carrinho)
 
     
     def test_add_to_cart(self):
-        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho)
+        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho, finalizado=False)
         
         try:
             itens_carrinho = ItensCarrinho()
@@ -50,7 +49,7 @@ class TesteLoja(TestCase):
             print("produto não encontrado")
             
     def test_del_from_cart(self):
-        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho)
+        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho, finalizado=False)
         
         try:
             produto = Produtos.objects.get(pk=self.id_produto)
@@ -72,10 +71,29 @@ class TesteLoja(TestCase):
             print("produto não encontrado")
             
     def test_list_cart(self):
-        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho)
+        carrinho, _ = Carrinho.objects.get_or_create(pk=self.id_carrinho, finalizado=False)
         itens_carrinho = ItensCarrinho.objects.filter(carrinho=carrinho)
         print("itens do carrinho")
         for item in itens_carrinho:
             print(item)
         print("total do carrinho: ", carrinho._get_total_cart())
+        
+        
+    def test_finish_cart(self):
+        try:
+            carrinho = Carrinho.objects.get(pk=self.id_carrinho, finalizado=False)
+            carrinho.pedido = str(uuid.uuid4())
+            carrinho.finalizado = True
+            carrinho.save()
+            
+            valor_final = carrinho._get_total_cart()
+            """ Cria o pedido """
+            # TODO: conectar com mercado pago para obter cod de pagamento e status
+            Pedido(carrinho_pedido=carrinho.pedido, total_pedido=valor_final).save()
+            print("pedido criado")
+        except Carrinho.DoesNotExist:
+            print("carrinho nao localizado")
+        except Exception as e:
+            print(e)
+        
         
