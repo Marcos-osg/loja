@@ -104,3 +104,18 @@ def carrinho(request):
         return 404, ({"message": "Carrinho nao localizado"})
     except Exception as e:
         return 500, ({"message": str(e)})
+    
+
+@api.post("limpar-carrinho", response={200:dict, 404:Error, 500:Error})
+def limpa_carrinho(request):
+    try:
+        carrinho = Carrinho.objects.get(pk="7360abc7-1bf5-41de-9c79-1048f8809271", finalizado=False)
+        itens_carrinho = ItensCarrinho.objects.filter(carrinho=carrinho)
+        for itens in itens_carrinho:
+            itens.delete()
+        return 200, ({"sucesso":"carrinho esvaziado"})
+    except Carrinho.DoesNotExist:
+        return 404, ({"message": "Carrinho nao localizado"})
+    except Exception as e:
+        return 500, {"message": str(e)}
+    
