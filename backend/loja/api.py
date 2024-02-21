@@ -1,9 +1,9 @@
 from typing import List
 from ninja import NinjaAPI
-from uuid import uuid4
+import uuid
 
 from backend.loja.schemas import PedidoSchema, CarrinhoSchema, ItensCarrinhoSchema, ProdutoSchema, Error, CarrinhoPayload, ProdutoInfoSchema
-from backend.loja.models import Produtos, ItensCarrinho, Carrinho
+from backend.loja.models import Produtos, ItensCarrinho, Carrinho, Pedido
 
 
 
@@ -118,4 +118,23 @@ def limpa_carrinho(request):
         return 404, ({"message": "Carrinho nao localizado"})
     except Exception as e:
         return 500, {"message": str(e)}
-    
+
+
+@api.post("fechar-pedido", response={200:dict, 404:Error, 500:Error})
+def finalizar_carrinho(request, id_carrinho:str):
+    try:
+        carrinho = Carrinho.objects.get(pk=id_carrinho, finalizado=False)
+        carrinho.pedido = str(uuid.uuid4())
+        carrinho.finalizado = True
+        carrinho.save()
+        
+        valor_final = carrinho._get_total_cart()
+        """ Cria o pedido """
+        # TODO: conectar com mercado pago para obter cod de pagamento e status
+        Pedido(carrinho_pedido=carrinho.pedido, total_pedido=valor_final).save()
+        return 200, ({"sucesso":"pedido criado"})
+    except Carrinho.DoesNotExist:
+        return 404, ({"message":"carrinho nao localizado"})
+    except Exception as e:
+        return 500, {"message": str(e)}
+        
