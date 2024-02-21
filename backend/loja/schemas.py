@@ -1,4 +1,5 @@
 from ninja import Schema
+from typing import List
 
 class Error(Schema):
     message: str
@@ -22,11 +23,6 @@ class ProdutoInfoSchema(Schema):
     marca: str
 
 
-class CarrinhoSchema(Schema):
-    """ Schema de carrinho """
-    pedido: str
-    valor_final: float
-    finalizado: bool
 
 
 class CarrinhoPayload(Schema):
@@ -41,6 +37,10 @@ class ItensCarrinhoSchema(Schema):
     valor_unitario: float
     valor_total_produto: float
 
+class CarrinhoSchema(Schema):
+    """ Schema de carrinho """
+    itens: List[ItensCarrinhoSchema]
+    valor_total: float
 
 class PedidoSchema(Schema):
     """ Schema de pedidos """
