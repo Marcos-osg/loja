@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  backend:
+    container_name: loja_virtual_backend
+    build:
+      context: .
+    volumes:
+      - .:/backend
+    ports:
+      - "8000:8000"
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15-alpine
+    container_name: loja_virtual_db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=loja_virtual_db
+    ports:
+      - "5455:5432"
+    volumes:
+      - loja_database_data:/var/lib/postgresql/data/
+
+include:
+  - ./frontend/docker-compose.yml
+
+volumes:
+  loja_database_data:

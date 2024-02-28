@@ -7,7 +7,7 @@ from backend.loja.models import Produtos, ItensCarrinho, Carrinho, Pedido
 
 
 
-api = NinjaAPI(title="API Loja Virtual")
+api = NinjaAPI(title="API Loja Virtual", version="1.0.0")
 
 @api.get("/todos-os-produtos", response={200:List[ProdutoSchema], 404:Error, 500:Error})
 def produtos(request):

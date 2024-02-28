@@ -13,6 +13,7 @@ class Header(models.Model):
 
     class Meta:
         abstract = True
+        db_table = f'{__package__.split(".")[-1]}"."'
 
     def __str__(self):
         return f"{self.id}, {self.created_at}"
@@ -26,11 +27,12 @@ class Produtos(Header):
     preco = models.DecimalField(max_digits=10, decimal_places=2 ,default=0)
     preco_promo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     estoque = models.PositiveIntegerField(default=0)
-    imagem = models.ImageField(null=True, blank=True)
+    # imagem = models.ImageField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Produto"
         verbose_name_plural = "Produtos"
+        db_table = Header._meta.db_table + verbose_name.lower()
         
     def _get_price_product(self):
         """ Retorna o preço do produto sendo ele promocional ou não """
@@ -70,6 +72,8 @@ class Carrinho(Header):
     class Meta:
         verbose_name = "Carrinho de compra"
         verbose_name_plural = "Carrinhos de compras"
+        db_table = Header._meta.db_table + verbose_name.lower()
+        
 
     def __str__(self):
         return f"{self.pedido} - Finalizado: {'Sim' if self.finalizado == True else 'Não'} x {self.valor_final}"
@@ -91,6 +95,8 @@ class ItensCarrinho(Header):
     class Meta:
         verbose_name = "Item do Carrinho"
         verbose_name_plural = "Itens do Carrinho"
+        db_table = Header._meta.db_table + verbose_name.lower()
+        
 
     def __str__(self):
         return f"{self.produto} x {self.quantidade} - R$ {self.valor_total_produto}"
@@ -104,3 +110,9 @@ class Pedido(Header):
     
     def __str__(self):
         return f"{self.carrinho_pedido} R$ {self.total_pedido}"
+    
+    class Meta:
+        verbose_name = "Pedido"
+        verbose_name_plural = "Pedidos"
+        db_table = Header._meta.db_table + verbose_name.lower()
+        

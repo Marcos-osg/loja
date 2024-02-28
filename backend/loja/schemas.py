@@ -12,7 +12,7 @@ class ProdutoSchema(Schema):
     marca: str
     preco: float
     preco_promo: float
-    estoque: str
+    estoque: int
     
 
 class ProdutoInfoSchema(Schema):
