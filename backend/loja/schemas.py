@@ -1,11 +1,13 @@
 from ninja import Schema
 from typing import List
+from pydantic import UUID4
 
 class Error(Schema):
     message: str
 
 class ProdutoSchema(Schema):
     """ Schema de produto """
+    id: UUID4
     tipo: str
     cor: str
     tamanho: str
